@@ -8,7 +8,7 @@ fn main() {
     println!("Found results:");
 
     for line in found_lines {
-        println!("{}", line)
+        println!("Line {}: {}", line.0, line.1 )
     }
 
 }

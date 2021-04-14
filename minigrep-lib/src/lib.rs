@@ -4,7 +4,7 @@ pub mod read;
 pub mod config;
 pub mod parse;
 
-pub fn grep(arguments: &[String]) -> Vec<String> {
+pub fn grep(arguments: &[String]) -> Vec<(usize, String)> {
     let config = config::build_config_from_args(arguments).unwrap_or_else(|error| {
         println!("Configuration was not parsed correctly: {}", error);
         process::exit(1);
