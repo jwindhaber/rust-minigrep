@@ -1,9 +1,19 @@
-use std::env;
 use minigrep_lib;
+use std::env;
 
 fn main() {
-    let arguments = minigrep_lib::parse_grep_arguments(env::args());
+    let args = env::args().skip(1).collect::<Vec<_>>();
+    let found_lines = minigrep_lib::grep(&args);
 
-    println!("Arguments: {:?}", arguments);
+    println!("Found results:");
+
+    for line in found_lines {
+        println!("{}", line)
+    }
+
 }
+
+
+
+
 

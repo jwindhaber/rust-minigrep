@@ -1,31 +1,24 @@
+use std::process;
 
-#[derive(Debug)]
-pub struct Config {
-    search_pattern: String,
-    filename: String,
+pub mod read;
+pub mod config;
+pub mod parse;
+
+pub fn grep(arguments: &[String]) -> Vec<String> {
+    let config = config::build_config_from_args(arguments).unwrap_or_else(|error| {
+        println!("Configuration was not parsed correctly: {}", error);
+        process::exit(1);
+    });
+
+    let reader = read::read_file(&config.filename).unwrap_or_else(|error| {
+        println!("Could not read file correctly: {}", error);
+        process::exit(1);
+    });
+
+    let found_lines = parse::find_lines(&config.search_pattern, reader);
+    found_lines
 }
 
-pub fn parse_grep_arguments(mut args: std::env::Args) -> Result<Config, &'static str> {
-    if args.len() < 3 {
-        return Err("not enough arguments provided")
-    }
-
-    // lets ignore the first one
-    args.next();
-
-    let search_pattern = match args.next() {
-        Some(pattern) => pattern,
-        None => return Err("Search pattern not provided"),
-    };
-
-    let filename = match args.next() {
-        Some(pattern) => pattern,
-        None => return Err("Search pattern not provided"),
-    };
-
-    return Ok(Config {search_pattern, filename});
-
-}
 
 #[cfg(test)]
 mod tests {
